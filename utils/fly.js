@@ -1,6 +1,5 @@
 var Fly = require('../libs/fly.js') 
 var fly = new Fly(); //创建fly实例
-import qs from '../libs/qs.js';
 import { getStorageToken } from './global.js';
 const basicConfig = require('./config.js')
 
@@ -9,14 +8,12 @@ fly.interceptors.request.use((config, promise) => {
     //配置请求参数
     config.baseURL = "https://trade.onloon.net/api";
     config.timeout = '8000';
-    config.headers['content-type'] = 'application/x-www-form-urlencoded';
+    config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
     let params = config.body || {};
     params['shopId'] = basicConfig.shopId;
     if (wx.getStorageSync('tokenBefore')) {
         params['token'] = wx.getStorageSync('token') ? wx.getStorageSync('token') : wx.getStorageSync('tokenBefore');
     }
-    
-   
     wx.showLoading({
         title: '加载中'
     })
@@ -50,7 +47,7 @@ fly.interceptors.response.use(
             try {
                 wx.removeStorageSync('token')
             } catch (e) {
-                console.log('-----wx.removeStorageSync error---')
+                console.log('-----removeStorageSync token error---')
             }
         } else if (err.status > 401) {
             console.log('-----404---')

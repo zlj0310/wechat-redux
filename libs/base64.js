@@ -1,100 +1,164 @@
+; (function (root) {
 
-function Base64() {
-    // private property
-    _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    // public method for encoding
-    this.encode = function (input) {
-        var output = "";
-        var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
-        var i = 0;
-        input = _utf8_encode(input);
-        while (i < input.length) {
-            chr1 = input.charCodeAt(i++);
-            chr2 = input.charCodeAt(i++);
-            chr3 = input.charCodeAt(i++);
-            enc1 = chr1 >> 2;
-            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-            enc4 = chr3 & 63;
-            if (isNaN(chr2)) {
-                enc3 = enc4 = 64;
-            } else if (isNaN(chr3)) {
-                enc4 = 64;
+    // Detect free variables `exports`.
+    var freeExports = typeof exports == 'object' && exports;
+
+    // Detect free variable `module`.
+    var freeModule = typeof module == 'object' && module &&
+        module.exports == freeExports && module;
+
+    // Detect free variable `global`, from Node.js or Browserified code, and use
+    // it as `root`.
+    var freeGlobal = typeof global == 'object' && global;
+    if (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal) {
+        root = freeGlobal;
+    }
+
+    /*--------------------------------------------------------------------------*/
+
+    var InvalidCharacterError = function (message) {
+        this.message = message;
+    };
+    InvalidCharacterError.prototype = new Error;
+    InvalidCharacterError.prototype.name = 'InvalidCharacterError';
+
+    var error = function (message) {
+        // Note: the error messages used throughout this file match those used by
+        // the native `atob`/`btoa` implementation in Chromium.
+        throw new InvalidCharacterError(message);
+    };
+
+    var TABLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    // http://whatwg.org/html/common-microsyntaxes.html#space-character
+    var REGEX_SPACE_CHARACTERS = /[\t\n\f\r ]/g;
+
+    // `decode` is designed to be fully compatible with `atob` as described in the
+    // HTML Standard. http://whatwg.org/html/webappapis.html#dom-windowbase64-atob
+    // The optimized base64-decoding algorithm used is based on @atk’s excellent
+    // implementation. https://gist.github.com/atk/1020396
+    var decode = function (input) {
+        input = String(input)
+            .replace(REGEX_SPACE_CHARACTERS, '');
+        var length = input.length;
+        if (length % 4 == 0) {
+            input = input.replace(/==?$/, '');
+            length = input.length;
+        }
+        if (
+            length % 4 == 1 ||
+            // http://whatwg.org/C#alphanumeric-ascii-characters
+            /[^+a-zA-Z0-9/]/.test(input)
+        ) {
+            error(
+                'Invalid character: the string to be decoded is not correctly encoded.'
+            );
+        }
+        var bitCounter = 0;
+        var bitStorage;
+        var buffer;
+        var output = '';
+        var position = -1;
+        while (++position < length) {
+            buffer = TABLE.indexOf(input.charAt(position));
+            bitStorage = bitCounter % 4 ? bitStorage * 64 + buffer : buffer;
+            // Unless this is the first of a group of 4 characters…
+            if (bitCounter++ % 4) {
+                // …convert the first 8 bits to a single ASCII character.
+                output += String.fromCharCode(
+                    0xFF & bitStorage >> (-2 * bitCounter & 6)
+                );
             }
-            output = output +
-                _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
-                _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
         }
         return output;
-    }
-    // public method for decoding
-    this.decode = function (input) {
-        var output = "";
-        var chr1, chr2, chr3;
-        var enc1, enc2, enc3, enc4;
-        var i = 0;
-        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-        while (i < input.length) {
-            enc1 = _keyStr.indexOf(input.charAt(i++));
-            enc2 = _keyStr.indexOf(input.charAt(i++));
-            enc3 = _keyStr.indexOf(input.charAt(i++));
-            enc4 = _keyStr.indexOf(input.charAt(i++));
-            chr1 = (enc1 << 2) | (enc2 >> 4);
-            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-            chr3 = ((enc3 & 3) << 6) | enc4;
-            output = output + String.fromCharCode(chr1);
-            if (enc3 != 64) {
-                output = output + String.fromCharCode(chr2);
-            }
-            if (enc4 != 64) {
-                output = output + String.fromCharCode(chr3);
-            }
-        }
-        output = _utf8_decode(output);
-        return output;
-    }
-    // private method for UTF-8 encoding
-    _utf8_encode = function (string) {
-        string = string.replace(/\r\n/g, "\n");
-        var utftext = "";
-        for (var n = 0; n < string.length; n++) {
-            var c = string.charCodeAt(n);
-            if (c < 128) {
-                utftext += String.fromCharCode(c);
-            } else if ((c > 127) && (c < 2048)) {
-                utftext += String.fromCharCode((c >> 6) | 192);
-                utftext += String.fromCharCode((c & 63) | 128);
-            } else {
-                utftext += String.fromCharCode((c >> 12) | 224);
-                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-                utftext += String.fromCharCode((c & 63) | 128);
-            }
-        }
-        return utftext;
-    }
-    // private method for UTF-8 decoding
-    _utf8_decode = function (utftext) {
-        var string = "";
-        var i = 0;
-        var c = c1 = c2 = 0;
-        while (i < utftext.length) {
-            c = utftext.charCodeAt(i);
-            if (c < 128) {
-                string += String.fromCharCode(c);
-                i++;
-            } else if ((c > 191) && (c < 224)) {
-                c2 = utftext.charCodeAt(i + 1);
-                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-                i += 2;
-            } else {
-                c2 = utftext.charCodeAt(i + 1);
-                c3 = utftext.charCodeAt(i + 2);
-                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-                i += 3;
-            }
-        }
-        return string;
-    }
-}
+    };
 
-exports.Base64 = Base64;
+    // `encode` is designed to be fully compatible with `btoa` as described in the
+    // HTML Standard: http://whatwg.org/html/webappapis.html#dom-windowbase64-btoa
+    var encode = function (input) {
+        input = String(input);
+        if (/[^\0-\xFF]/.test(input)) {
+            // Note: no need to special-case astral symbols here, as surrogates are
+            // matched, and the input is supposed to only contain ASCII anyway.
+            error(
+                'The string to be encoded contains characters outside of the ' +
+                'Latin1 range.'
+            );
+        }
+        var padding = input.length % 3;
+        var output = '';
+        var position = -1;
+        var a;
+        var b;
+        var c;
+        var d;
+        var buffer;
+        // Make sure any padding is handled outside of the loop.
+        var length = input.length - padding;
+
+        while (++position < length) {
+            // Read three bytes, i.e. 24 bits.
+            a = input.charCodeAt(position) << 16;
+            b = input.charCodeAt(++position) << 8;
+            c = input.charCodeAt(++position);
+            buffer = a + b + c;
+            // Turn the 24 bits into four chunks of 6 bits each, and append the
+            // matching character for each of them to the output.
+            output += (
+                TABLE.charAt(buffer >> 18 & 0x3F) +
+                TABLE.charAt(buffer >> 12 & 0x3F) +
+                TABLE.charAt(buffer >> 6 & 0x3F) +
+                TABLE.charAt(buffer & 0x3F)
+            );
+        }
+
+        if (padding == 2) {
+            a = input.charCodeAt(position) << 8;
+            b = input.charCodeAt(++position);
+            buffer = a + b;
+            output += (
+                TABLE.charAt(buffer >> 10) +
+                TABLE.charAt((buffer >> 4) & 0x3F) +
+                TABLE.charAt((buffer << 2) & 0x3F) +
+                '='
+            );
+        } else if (padding == 1) {
+            buffer = input.charCodeAt(position);
+            output += (
+                TABLE.charAt(buffer >> 2) +
+                TABLE.charAt((buffer << 4) & 0x3F) +
+                '=='
+            );
+        }
+
+        return output;
+    };
+
+    var base64 = {
+        'encode': encode,
+        'decode': decode,
+        'version': '0.1.0'
+    };
+
+    // Some AMD build optimizers, like r.js, check for specific condition patterns
+    // like the following:
+    if (
+        typeof define == 'function' &&
+        typeof define.amd == 'object' &&
+        define.amd
+    ) {
+        define(function () {
+            return base64;
+        });
+    } else if (freeExports && !freeExports.nodeType) {
+        if (freeModule) { // in Node.js or RingoJS v0.8.0+
+            freeModule.exports = base64;
+        } else { // in Narwhal or RingoJS v0.7.0-
+            for (var key in base64) {
+                base64.hasOwnProperty(key) && (freeExports[key] = base64[key]);
+            }
+        }
+    } else { // in Rhino or a web browser
+        root.base64 = base64;
+    }
+
+}(this));

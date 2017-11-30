@@ -4,15 +4,14 @@ import { bindActionCreators } from '../../libs/redux.js';
 import { enhancedConnect } from '../../libs/enhancedConnect.js';
 const basicConfig = require('../../utils/config.js');
 import { doLogin } from '../../actions/login.js';
+const base64 = require('../../libs/base64.js')
 
 const login = {
     data: {
-        codeSrc: '',
-        
+        codeSrc: ''
     },
     onLoad: function () {
         this.getCode();
-       
     },
     getCode : function(){
         let token = (wx.getStorageSync('token') ? wx.getStorageSync('token') : wx.getStorageSync('tokenBefore')) || '';
@@ -25,32 +24,8 @@ const login = {
     formSubmit: function (e) {
         let data = e.detail.value;
         data['remember']= false;
-        data['token'] = wx.getStorageSync('tokenBefore');
-        data.password = 'YTEyMzQ1Ng==';
-        
-        //this.doLogin(data)
-        wx.request({
-            url: "https://trade.onloon.net/api/login",
-            data: data,
-            method: 'POST',
-            header: {
-                "Content-Type":"application/x-www-form-urlencoded"
-            },
-            success: function (res) {
-                if (res.data.success){
-                    wx.setStorage({
-                        key: "token",
-                        data: res.data.data
-                    });
-                    wx.navigateBack({
-                        delta: 1
-                    })
-                }
-            },
-            fail: function (err) {
-                console.log(err)
-            }
-        })
+        data.password = base64.encode(data.password);
+        this.doLogin(data);
     }
 }
 

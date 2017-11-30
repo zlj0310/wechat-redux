@@ -2,7 +2,7 @@
     "pages": [
         "pages/index/index",
         "pages/detail/detail",
-        "pages/login/login"
+        "pages/login/login"        
     ],
     "window": {
         "backgroundTextStyle": "light",

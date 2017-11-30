@@ -461,10 +461,14 @@
                                 // If the request data is json object, transforming it  to json string,
                                 // and set request content-type to "json". In browser,  the data will
                                 // be sent as RequestBody instead of FormData
-                                if (!utils.isFormData(options.body) && ["object", "array"].indexOf(utils.type(options.body)) !== -1) {
-                                    options.headers["Content-type"] = 'application/json;charset=utf-8';
-                                    data = JSON.stringify(options.body);
-                                }
+                                
+                                /*
+                                 TODO 2017/11/30 zhulijun
+                                 */
+                                // if (!utils.isFormData(options.body) && ["object", "array"].indexOf(utils.type(options.body)) !== -1) {
+                                //     options.headers["Content-type"] = 'application/json;charset=utf-8';
+                                //     data = JSON.stringify(options.body);
+                                // }
 
                                 for (var k in options.headers) {
                                     if (k.toLowerCase() === "content-type" && (utils.isFormData(options.body) || !options.body || isGet)) {

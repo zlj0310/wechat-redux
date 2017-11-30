@@ -11,9 +11,14 @@ export function doLogin(params) {
     return (dispatch, getState) => {
         return fly.post('/login', params || {})
             .then(res => {
-                console.log('---res----', res)
                 if (res.success) {
-                    console.log('---res.data----', res.data)
+                    wx.setStorage({
+                        key: "token",
+                        data: res.data
+                    });
+                    wx.navigateBack({
+                        delta: 1
+                    })
                 }
             })
             .catch(err => {
