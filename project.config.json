@@ -10,7 +10,7 @@
 	"compileType": "miniprogram",
 	"libVersion": "1.6.6",
 	"appid": "wx2363ec1790797405",
-	"projectname": "b2c-wx",
+	"projectname": "wechat-redux",
 	"condition": {
 		"search": {
 			"current": -1,
