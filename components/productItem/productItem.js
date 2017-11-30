@@ -1,8 +1,5 @@
 // components/productItem/productItem.js
 module.exports = {
-    data: {
-       
-    },
     bindGoCart: function () {
         let token = wx.getStorageSync('token')
         if (!token) {
@@ -12,8 +9,7 @@ module.exports = {
         }else {
             wx.showToast({
                 title: '成功',
-                icon: 'success',
-                duration: 2000
+                icon: 'success'
             })
         }
     }

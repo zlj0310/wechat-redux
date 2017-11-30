@@ -1,11 +1,6 @@
 
 const fly = require('../utils/fly.js').default;
 
-export const actionTypes = {
-
-};
-
-
 //登录
 export function doLogin(params) {
     return (dispatch, getState) => {
