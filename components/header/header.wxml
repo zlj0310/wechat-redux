@@ -1,0 +1,10 @@
+<!--components/header/header.wxml-->
+<view class='nav-wrapper'>
+    <view class='nav-left fl'>
+        <i class="iconfont icon-liebiao"></i>
+    </view>
+    <view class='nav-right fr'>
+        <i class="iconfont icon-sousuo" bindtap="bindSearch"></i>
+        <i class="iconfont icon-caigou-xianxing"></i>
+    </view>
+</view>

@@ -1,0 +1,7 @@
+<!--components/footer/footer.wxml-->
+<template name="footer">
+    <view class='footer-wrapper'>
+    footer
+    </view>
+</template>
+

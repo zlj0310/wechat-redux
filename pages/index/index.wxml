@@ -1,0 +1,34 @@
+<!--index.wxml-->
+<import src="../../components/productItem/productItem.wxml"/>
+
+<view class='container'>
+    <!-- <include src="../../components/header/header.wxml"/> -->
+    
+    <view class='logo-wrapper'>
+        <image src="{{home.decoInfo.logo}}"/>
+    </view>
+    <swiper indicator-dots="{{indicatorDots}}" autoplay='{{autoplay}}' interval='{{interval}}' duration='{{duration}}' class='swiper'>
+        <block wx:for="{{home.decoInfo.turnPlay}}" wx:key="{{index}}" class='swipper-wrap' >
+            <swiper-item>
+                <image src="{{item.picUrl}}" class="slide-image"/>
+            </swiper-item>
+        </block>
+    </swiper>  
+    <view class='ads-wrapper fl'>
+        <view wx:for='{{home.decoInfo.fourAd}}' wx:key="{{index}}" class='ads-item'>
+            <image src='{{item.picUrl}}' class='ads-img'/>
+        </view>
+    </view>
+    <view class='case-wrapper fl'>
+        <view wx:for='{{home.showCaseInfo}}' wx:key="{{index}}">
+            <view class='case-name'>{{item.name}}</view>
+            <view wx:for='{{item.itemDetailList}}' wx:key="{{index}}" wx:for-item="detail" class='item-wrapper'>
+                <template is="productItem" data="{{detail}}"/>
+            </view>
+        </view>
+    </view>
+
+    <view class='banner-wrapper fl'>
+        <image src='{{home.decoInfo.banner.picUrl}}' />
+    </view>
+</view>

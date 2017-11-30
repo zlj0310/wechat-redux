@@ -1,0 +1,33 @@
+/* pages/login/login.wxss */
+.login-wrapper {
+    padding: 4%;
+}
+.login-item {
+    margin-bottom:20rpx;
+    height:70rpx;
+}
+.login-item input{
+    font-size:30rpx;
+    height:100%;
+    border-bottom:1px solid #e6e6e6;
+}
+.item-extra input{
+    width: 65%;
+    float: left;
+}
+.code-wrap {
+    width:30%;
+    float:right;
+    height:70rpx;
+}
+.login-btn {
+    display:block;
+    height:80rpx;
+    line-height:80rpx;
+    text-align:center;
+    border-radius:10rpx;
+    font-size:34rpx;
+    margin-top:80rpx;
+    background:#fc4f3f;
+    color:#fff;
+}

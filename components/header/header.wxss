@@ -1,0 +1,11 @@
+/* components/header/header.wxss */
+.nav-wrapper {
+    height: 80rpx;
+    line-height:80rpx;
+    color: #44A8F2;
+    border-bottom: 1rpx solid #eee;
+    padding: 0 2%;
+}
+.nav-right .iconfont{
+    margin-left: 25rpx;
+}

@@ -1,0 +1,12 @@
+<!--components/productItem/productItem.wxml-->
+ <template name='productItem'> 
+    <view class='main-wrapper'>
+        <navigator url="../detail/detail?itemId={{detail.itemId}}">
+            <image src='{{detail.image}}' class='item-img'/>
+            <view class='item-name'>{{detail.name}}</view>
+            <view class='item-price'>$ {{detail.price}}</view>
+        </navigator>
+        <view class='add-btn' bindtap="bindGoCart">ADD TO CART</view>
+    </view>
+ </template> 
+

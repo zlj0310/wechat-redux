@@ -1,0 +1,2 @@
+@import './header/header.wxss';
+@import './footer/footer.wxss';

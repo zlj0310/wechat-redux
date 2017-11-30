@@ -1,0 +1,17 @@
+<!--pages/login/login.wxml-->
+<view class='container login-wrapper'>
+    <form bindsubmit="formSubmit">
+        <view class='login-item'>
+            <input name="username" placeholder='Your mailbox number' />
+        </view>
+        <view class='login-item'>
+            <input name="password" password placeholder='Password' />
+        </view>
+        <view class='login-item item-extra'>
+            <input name="sRand" placeholder='Codes' />
+            <image src='{{codeSrc}}' class='code-wrap' bindtap="getCode"></image>
+        </view>
+
+        <button class='login-btn' formType="submit">Login</button>
+    </form>
+</view>
