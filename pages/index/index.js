@@ -2,7 +2,7 @@
 //获取应用实例
 const auth = require('../../utils/filter.js');
 import { bindActionCreators } from '../../libs/redux.js';
-import { enhancedConnect } from '../../libs/enhancedConnect.js';
+import { enhancedConnect } from '../../libs/enhancedConnect.js';   //相当于react-redux 之所以不用react-redux是因为它依赖的太多了，所以网上找了替代的 
 import { getShopInfo, getDecoInfo, getShowCaseInfo} from '../../actions/home.js';
 import { getMenuList } from '../../actions/header.js';
 import productItem from '../../components/productItem/productItem.js'
@@ -17,9 +17,7 @@ const home = {
         duration: 1000,
     },
     onLoad: function () {
-        // this.getShopInfo();
         this.getDecoInfo();
-        this.getMenuList();
         this.getShowCaseInfo();
     },
     //事件处理函数
@@ -36,9 +34,7 @@ const mapStateToData = ({ home ,header}) => ({
 });
 
 const mapDispatchToPage = dispatch => ({
-    getShopInfo: bindActionCreators(getShopInfo, dispatch),
     getDecoInfo: bindActionCreators(getDecoInfo, dispatch),
-    getMenuList: bindActionCreators(getMenuList, dispatch),
     getShowCaseInfo: bindActionCreators(getShowCaseInfo, dispatch)
 });
 

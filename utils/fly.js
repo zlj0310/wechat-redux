@@ -6,8 +6,8 @@ const basicConfig = require('./config.js')
 //添加请求拦截器
 fly.interceptors.request.use((config, promise) => {
     //配置请求参数
-    config.baseURL = "https://trade.onloon.net/api";
-    config.timeout = '8000';
+    config.baseURL = basicConfig.baseURL;
+    config.timeout = '6000';
     config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
     let params = config.body || {};
     params['shopId'] = basicConfig.shopId;

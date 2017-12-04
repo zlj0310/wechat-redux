@@ -11,7 +11,7 @@
     width:25%;
 }
 .swiper {
-    height:320rpx;
+    height:300rpx;
 }
 .swipper-wrap {
     width: 100%;
